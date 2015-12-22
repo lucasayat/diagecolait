@@ -1,0 +1,112 @@
+
+\documentclass[10pt,a4paper,portrait]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+ \usepackage[francais]{babel}
+ 
+\usepackage[margin=0.3in]{geometry}
+\usepackage[Q=yes,pverb-linebreak=no]{examplep}
+\usepackage{wrapfig}
+%\usepackage[cyr]{aeguill}
+\usepackage{xspace}
+\usepackage{array,multirow,tabularx}
+\usepackage{color}
+\usepackage{sidecap}
+\usepackage{titlesec}
+  \titleformat{\part}
+   {\normalfont\fontsize{13pt}{16pt}\selectfont\bfseries\color{red}}% apparence commune au titre et au numéro
+   {\thepart}% apparence du numéro
+   {1em}% espacement numéro/texte
+   {}% apparence du titre}
+
+\begin{document}
+
+\title{Diagnostic\includegraphics[width = 20mm]{www/logoreso.jpg} \hfill}
+\date{\vspace{-5ex}}
+
+ \author{Type d'atelier lait: {\Q{\Sexpr{input$blanblat}}}\\
+     Conjoncture 2014.}
+
+
+
+\maketitle
+
+
+\begin{center}
+\LARGE{\textbf{\textcolor{blue} {Produits} }} \\
+\vspace{1\baselineskip}
+\end{center}
+\begin{wrapfigure}{r}{1\linewidth}
+\centering
+\vspace{-60pt}
+<<gridprod, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=3, fig.width=10>>=
+  
+a<-reperat()
+#a<-3
+b<-c(31, 34, 37)
+k<-posat[b,a]
+w<-data.frame(Repere=posat[b,2],
+              Moyenne=posat[b,a],
+              Mini=round(posat[b,a]*(1-posat[b+1,a]),0),
+              Maxi=round(posat[b,a]*(1+posat[b+1,a]),0),
+              Expl=rep("",length(b)),
+              Commentaires=rep("",length(b)))
+
+grid.table(w,
+  gpar.coretext = gpar(fontsize = 10,col="blue",cex=1.5),
+   gpar.corefill = gpar(fill = "lightblue", alpha=1, col = "red"),
+ gpar.rowtext = gpar(col = "blue", cex = 1.5, fontface = "bold"), 
+ gpar.coltext = gpar(col = "red", cex = 1.5, fontface = "italic"),
+  show.rownames = FALSE,
+   h.even.alpha = 0.5,show.vlines = TRUE,padding.h = unit(8, "mm"))
+ @
+\LARGE{\textbf{\textcolor{blue} {Systeme alimentaire} }} \\
+\vspace{1\baselineskip}
+<<gridalim, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=3, fig.width=10>>=
+a<-reperat()
+#a<-3
+b<-c(13, 40, 43, 49, 52, 55, 58, 19)
+k<-posat[b,a]
+w<-data.frame(Repere=posat[b,2],
+              Moyenne=round(posat[b,a],0),
+              Mini=round(posat[b,a]*(1-posat[b+1,a]),0),
+              Maxi=round(posat[b,a]*(1+posat[b+1,a]),0),
+              Expl=rep("",length(b)),
+              Commentaires=rep("",length(b)))
+
+grid.table(w,
+  gpar.coretext = gpar(fontsize = 10,col="blue",cex=1.5),
+   gpar.corefill = gpar(fill = "lightblue", alpha=1, col = "red"),
+ gpar.rowtext = gpar(col = "blue", cex = 1.5, fontface = "bold"), 
+ gpar.coltext = gpar(col = "red", cex = 1.5, fontface = "italic"),
+  show.rownames = FALSE,
+   h.even.alpha = 0.5,show.vlines = TRUE,padding.h = unit(8, "mm"))
+
+ @
+\vspace{1\baselineskip}
+\LARGE{\textbf{\textcolor{blue} {Batiments, services et capitaux} }} \\
+\vspace{1\baselineskip}
+<<gridaut, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=3, fig.width=10>>=
+a<-reperat()
+#a<-3
+b<-c(22, 61, 64, 67, 70,73, 76, 79, 82)
+k<-posat[b,a]
+w<-data.frame(Repere=posat[b,2],
+              Moyenne=round(posat[b,a],0),
+              Mini=round(posat[b,a]*(1-posat[b+1,a]),0),
+              Maxi=round(posat[b,a]*(1+posat[b+1,a]),0),
+              Expl=rep("",length(b)),
+              Commentaires=rep("",length(b)))
+
+grid.table(w,
+  gpar.coretext = gpar(fontsize = 10,col="blue",cex=1.5),
+   gpar.corefill = gpar(fill = "lightblue", alpha=1, col = "red"),
+ gpar.rowtext = gpar(col = "blue", cex = 1.5, fontface = "bold"), 
+ gpar.coltext = gpar(col = "red", cex = 1.5, fontface = "italic"),
+  show.rownames = FALSE,
+   h.even.alpha = 0.5,show.vlines = TRUE,padding.h = unit(8, "mm"))
+
+ @
+\end{wrapfigure}
+\end{document}

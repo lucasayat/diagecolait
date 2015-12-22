@@ -1,0 +1,156 @@
+
+\documentclass[10pt,a4paper,portrait]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+ \usepackage[francais]{babel}
+ 
+\usepackage[margin=0.3in]{geometry}
+\usepackage[Q=yes,pverb-linebreak=no]{examplep}
+\usepackage{wrapfig}
+%\usepackage[cyr]{aeguill}
+\usepackage{xspace}
+\usepackage{array,multirow,tabularx}
+\usepackage{color}
+\usepackage{sidecap}
+\usepackage{titlesec}
+  \titleformat{\part}
+   {\normalfont\fontsize{13pt}{16pt}\selectfont\bfseries\color{red}}% apparence commune au titre et au numéro
+   {\thepart}% apparence du numéro
+   {1em}% espacement numéro/texte
+   {}% apparence du titre}
+
+\begin{document}
+
+\title{Diagnostic\includegraphics[width = 20mm]{www/logoreso.jpg} \hfill}
+\date{\vspace{-5ex}}
+ \author{Systeme d'exploitation: {\Q{\Sexpr{input$blansys}}}\\ 
+     Conjoncture 2014.}
+\maketitle
+
+\begin{wrapfigure}{r}{0.5\linewidth}
+\centering
+\vspace{-250pt}
+<<produmo, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=2, fig.width=8>>=
+    
+   prodlait<-input$prilait*input$laiven/1000
+    prodviabl<-input$pvbl*input$laiven/1000
+    aid<-input$aid
+    autprod<-input$autprod 
+    prod<-prodlait+prodviabl+autprod+aid
+    prod_umo<-(prod/(input$TUMOE+input$TUMOS))/1000
+    colsis<-  which(colnames(posys) == input$blansys)
+   
+    barex(a=colsis,var="pbumo",posex=0,rog=1)
+ @
+\vspace{3\baselineskip}
+<<ebepb, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=2, fig.width=8>>=
+    prodlait<-input$prilait*input$laiven/1000
+    prodviabl<-input$pvbl*input$laiven/1000
+    aid<-input$aid
+    autprod<-input$autprod 
+    prod<-prodlait+prodviabl+autprod+aid
+    chop<-input$chop
+    chst2<-input$chst-input$foncier-input$msa-input$salex
+    ebe2<-prod-chop-chst2
+   
+    pcebe<-round(100*ebe2/prod,0)
+    
+    barex (a=colsis,var="ebep",posex=0,rog=1)
+ @
+\vspace{3\baselineskip}
+<<ebeumo, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=2, fig.width=8>>=
+  
+  prodlait<-input$prilait*input$laiven/1000
+  prodviabl<-input$pvbl*input$laiven/1000
+  aid<-input$aid
+  autprod<-input$autprod 
+  prod<-prodlait+prodviabl+autprod+aid
+  chop<-input$chop
+  MSAI<-as.numeric(gsub(",",".",input$msa))
+  chst<-input$chst+MSAI-msa()
+  ebe<-prod-chop-chst
+  ebe_umo<-(ebe/(input$TUMOE+input$TUMOS))/1000
+
+  barex (a=colsis,var="ebeumo",posex=0,rog=1)
+ @
+\vspace{3\baselineskip}
+<<annuebe, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=2, fig.width=8>>=
+    
+prodlait<-input$prilait*input$laiven/1000
+    prodviabl<-input$pvbl*input$laiven/1000
+    aid<-input$aid
+    autprod<-input$autprod 
+    prod<-prodlait+prodviabl+autprod+aid
+    
+    chop<-input$chop
+    MSAI<-as.numeric(gsub(",",".",input$msa))
+    chst<-input$chst+MSAI-msa()
+    ebe<-prod-chop-chst
+    annu<-input$annu
+    
+   annu_ebe<-round(100*annu/ebe)
+    barex(a=colsis,var="anub",posex=-10,rog=0)
+ @
+\end{wrapfigure}
+\begin{tabular}{rl} 
+  \hline
+ \textbf{\textcolor{blue} {Produits} } \\
+ \hline
+ \\
+  Produit brut total (1)& \dotfill  Euros\\
+ Dt produit lait & \dotfill  Euros\\ 
+ Produit brut par UMO total & \dotfill  Euros\\
+  \\
+  \hline
+ \textbf{\textcolor{blue} {Charges} } \\
+ \hline
+ \\
+Charges ope. (2)& \dotfill  Euros\\
+Charges de struct. (3) & \dotfill Euros\\ 
+(Hors amort. et FF) & \\
+Dont charges sociales exploitant (4)&  \dotfill Euros\\
+Dont salaires et CS sal. (5)& \dotfill Euros\\
+Dont foncier (ferm.et Imp. fonc.) (6)& \dotfill Euros\\
+
+\\
+  \hline
+ \textbf{\textcolor{blue} {EBE} } \\
+ \hline
+ \\
+EBE (1-2-3) (7)& \dotfill  Euros\\
+EBE par UMO (7/UMO) & \dotfill  Euros\\
+EBE(hors MO et fonc.)(7+4+5+6)(8)&\dotfill Euros\\
+EBE(hors MO et fonc.) / UMO(8/UMO)&\dotfill Euros\\
+EBE (hors MO et fonc.)/PB (8/1) & \dotfill  \% du PB\\
+\\
+  \hline
+ \textbf{\textcolor{blue} {Endettement} } \\
+ \hline
+ \\
+Annuites (9) & \dotfill  Euros\\
+Annuites/EBE (9/7) & ... \% de l'EBE\\
+\\
+  \hline
+ \textbf{\textcolor{blue} {Revenu} } \\
+ \hline
+ \\
+Disponible (7 - 9) (10)& \dotfill  Euros\\
+Disp./UMO expl.(10/UMO expl.)& \dotfill  Euros\\
+ \hline
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+ Commentaires\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\end{tabular}
+
+\end{document}

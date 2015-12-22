@@ -1,0 +1,654 @@
+
+\documentclass[10pt,a4paper,portrait]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\inputencoding{latin1}
+
+\usepackage[T1]{fontenc}
+ \usepackage[francais]{babel}
+ 
+\usepackage[margin=0.3in]{geometry}
+\usepackage[Q=yes,pverb-linebreak=no]{examplep}
+\usepackage{wrapfig}
+%\usepackage[cyr]{aeguill}
+\usepackage{xspace}
+\usepackage{array,multirow,tabularx}
+\usepackage{color}
+\usepackage{sidecap}
+\usepackage{titlesec}
+  \titleformat{\part}
+   {\normalfont\fontsize{13pt}{16pt}\selectfont\bfseries\color{red}}% apparence commune au titre et au numéro
+   {\thepart}% apparence du numéro
+   {1em}% espacement numéro/texte
+   {}% apparence du titre}
+
+\begin{document}
+\title{Diagnostic\includegraphics[width = 20mm]{www/logoreso.jpg} \hfill}
+\date{\vspace{-5ex}}
+
+
+<<reperes,echo=FALSE,prompt=FALSE,results='hide'>>=
+        sys<-switch(input$sys,
+            "Lait_spec"="Lait specialise de plaine",
+            "Lait_CV"="Lait et cultures de vente",
+            "CV_lait"="Cultures de vente et lait",
+             "Lait_viande"="Lait de plaine et viande bovine",
+             "Lait_viande_CV"="Lait, viande bovine et cultures de vente",
+           "BLplaine_AB"="Exploitation laitiere de plaine en bio")
+ 
+
+        atel<-switch(input$blat,
+                   "normand"="systeme normand",
+                   "plaine_robot"="Lait de plaine avec robot",
+                   "ABPla"="Atelier lait de plaine en bio",
+                   "plaine_MDS"="Lait de plaine Mais dominant stocks",
+                   "plaine_MHS"="Lait plaine Mais-herbe stocks",
+                   "plaine_MHP"="Lait plaine Mais-herbe paturage")
+
+date<-format(Sys.Date(), "%d %B %Y")
+@
+ 
+
+ \author{Exploitation: \textbf{\textcolor{red}{\Sexpr{input$ferme}}}\\ 
+     Conjoncture 2014.\\
+  R\'ealis\'e le :\Sexpr{date} \\  
+  Par: \Sexpr{input$tec}}
+
+
+
+\maketitle
+
+%1 titre1
+%2 titre2
+%\small {\textcolor{\textbf{{red}{Caract\'eristiques de l'exploitation:}}}}
+
+\part{Caract\'eristiques de l'exploitation:}
+
+\textbf{\textcolor{blue} {Type d'exploitation et d'atelier lait:} }
+\vspace{2\baselineskip}
+%\begin{wrapfigure}{R}{6cm}
+%\vspace{-100pt}
+
+\begin{wrapfigure}{R}{0.5\linewidth}
+\centering
+\vspace{-200pt}
+\caption{Systeme d'exploitation}
+<<exploit, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=5, fig.width=8>>=
+        
+ taille<-1.2
+    par(bg="snow",mar=c(0,0,0,0),bty="n")
+    
+   
+    plot(1,1,xlim=c(-1,3),ylim=c(0,3),pch=19,cex=0,col="blue",
+         xlab="",ylab="",
+         font.lab=4,cex.lab=taille*0.8,cex.axis=1,main="",axes=F)
+    
+     grid(nx=4,ny=3,col = "plum", lty = "dotted", lwd = 1)
+    sepx1<-1
+    sepx2<-2
+    sepy<-1
+    
+    rect(0,0,sepx1,sepy,col="red",border=NA)   
+    rect(0,sepy,sepx1,2,col="cyan",border=NA)
+    #rect(sepx2,0,3,sepy,col="orange",border=NA)   
+    rect(sepx1,sepy,sepx2,2,col="green",border=NA)
+    rect(sepx1,0,3,sepy,col="plum",border=NA) 
+    rect(sepx2,sepy,3,2,col="yellow",border=NA)
+    
+    text(-1, 3, labels = "Cultures de vente", cex = 1.5, col = "blue", pos = 4)
+        
+        text(0, 2.7, labels = "Cult. vente <40ha  ", cex = 0.8, col = "blue", font = 2, pos = 4)
+        text(0, 2.5, labels = "ou moins de", cex = 0.8, col = "blue", font = 2, pos = 4)
+        text(0, 2.3, labels = "de 30% de la SAU", cex = 0.8, col = "blue", font = 2, pos = 4)
+        
+        text(sepx1, 3, labels = "Cult. vente > 40ha et ", cex = 0.8, col = "blue", font = 2, pos = 4)
+        text(sepx1, 2.8, labels = "plus de 30% de la SAU", cex = 0.8, col = "blue", font = 2, pos = 4)
+        text(sepx1, 2.6, labels = "et plus de 5000 litres ", cex = 0.8, col = "blue", font = 2, pos = 4)
+        text(sepx1, 2.4, labels = "de lait par ha ", cex = 0.8, col = "blue", font = 2, pos = 4)
+        text(sepx1, 2.2, labels = "de cult. de vente", cex = 0.8, col = "blue", font = 2, pos = 4)
+        
+        m <- 0.1
+        text(sepx2 + m, 3, labels = "Cult. vente > 40 ha et", cex = 0.8, col = "blue", font = 2, 
+            pos = 4)
+        text(sepx2 + m, 2.8, labels = "plus de 30% de la SAU", cex = 0.8, col = "blue", font = 2, pos = 4)
+        text(sepx2 + m, 2.6, labels = "et moins de 5000 litres", cex = 0.8, col = "blue", font = 2, 
+            pos = 4)
+        text(sepx2 + m, 2.4, labels = "de lait par ha", cex = 0.8, col = "blue", font = 2, 
+            pos = 4)
+        text(sepx2 + m, 2.2, labels = "de cult. de vente", cex = 0.8, col = "blue", font = 2, 
+            pos = 4)
+        
+        
+        text(-1, 2, labels = "Viande", cex = 1.5, col = "red", pos = 4)
+     text(-1.1,0.7,labels="Plus de 5VA ou ",cex=0.8,col="red",font=2,pos=4)
+    text(-1.2,0.5,labels="plus de 0.2JB/VL",cex=0.8,col="red",font=2,pos=4)
+   
+    text(-1.1,1.6,labels="Moins de 5VA et ",cex=0.8,col="red",font=2,pos=4)
+    text(-1.2,1.4,labels="moins de 0.2JB/VL",cex=0.8,col="red",font=2,pos=4)
+    
+    text(0.1,1.7,labels="Lait_spec",pos=4)
+    text(1.1,1.7,labels="Lait_CV",pos=4)
+    text(2.1,1.7,labels="CV_lait",pos=4)
+    
+    text(0.1,0.7,labels="Lait_viande",pos=4)
+    text(2,0.7,labels="Lait_viande_CV")
+    #text(2,0.7,labels="CV_lait_viande",pos=4)
+    
+    
+    cer<-input$SAU-input$SFP
+    pcer<-100*cer/input$SAU
+    laicer<-ifelse( input$SFP<input$SAU,input$laiprod/(input$SAU-input$SFP),10000)
+    jbvl<-input$eg/input$vl
+    va<-input$va
+    
+    x<-ifelse(cer>40,ifelse(pcer>30,ifelse(laicer>5000,1.5,2.5),0.5),0.5)
+    y<-ifelse(va<5,ifelse(jbvl<0.2,1.5,0.5),0.5)
+    
+    points(x,y,pch=19,cex=3,col="blue")
+
+ @
+\caption{Type d'atelier lait}
+<<atel, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=5, fig.width=8>>=
+        
+    taille<-1.2
+    par(bg="snow",mar=c(5,6,0,0),bty="n")
+    y <- input$stofou/input$ugb
+    x <- 100*input$stoma/input$stofou
+    
+    plot(x,y,xlim=c(-10,100),ylim=c(0,6.5),pch=19,cex=taille*1.5,col="blue",
+         xlab="Part de mais dans la ration (%)",ylab="TMS fourrages stockes par UGB",
+         font.lab=4,cex.lab=taille*0.8,cex.axis=1,main="")
+    
+    grid(col = "plum", lty = "dotted", lwd = 1)
+    sepx1<-20
+    sepx2<-60
+    sepy<-4
+    
+    rect(0,0,sepx1,sepy,col="green",border=NA)   
+    rect(0,sepy,sepx1,6,col="green4",border=NA)
+    rect(sepx1,0,sepx2,sepy,col="cyan",border=NA) 
+    text((sepx1+sepx2)/2,2,"MHP")
+    rect(sepx1,sepy,sepx2,6,col="orange",border=NA)
+    text((sepx1+sepx2)/2,5,"MHS")
+    rect(sepx2,0,100,sepy,col="plum",border=NA) 
+    rect(sepx2,sepy,100,6,col="yellow",border=NA)
+    text((100+sepx2)/2,5,"MDS")
+    
+    text(0,6.2,labels="Herbe",cex=1.2,col="blue",font=2,pos=4)
+    text(sepx1,6.2,labels="Mais-herbe",cex=1.2,col="blue",font=2,pos=4)
+    text(sepx2,6.2,labels="Mais dominant",cex=1.2,col="blue",font=2,pos=4)
+    text(-10,0,labels="Paturage",cex=1.2,col="blue",font=2,srt=90,pos=4)
+    text(-10,4,labels="Stocks",cex=1.2,col="blue",font=2,srt=90,pos=4)
+    
+    points(x,y,pch=19,cex=3,col="red")
+
+
+ @
+\end{wrapfigure}
+ \begin{tabular}{rl} 
+  \hline
+ \textbf{\textcolor{blue} {Main d'oeuvre} } \\
+ \hline
+           \\
+ Main d'oeuvre exploitant& \Sexpr{input$TUMOE} UMO exploitant\\
+ Main d'oeuvre salari\'e& \Sexpr{input$TUMOS} UMO salarie\\ 
+ \\
+ \hline
+ \textbf{\textcolor{blue} {Surfaces} } \\
+ \hline
+ \\
+Surface agricole& \Sexpr{input$SAU} ha \\
+Surface fourrag\`ere& \Sexpr{input$SFP} ha \\
+Surface cultures de vente& \Sexpr{cer} ha\\
+Soit& \Sexpr{round(pcer,0)} \% de la SAU\\
+\\
+\hline
+ \textbf{\textcolor{blue} {Cheptel} } \\
+ \hline
+ \\
+Nombre d'UGB & \Sexpr{input$ugb} UGB\\
+Nombre de vaches laiti\`eres  & \Sexpr{input$vl}\\
+Nombre de VA & \Sexpr{input$va} \\
+Nombre de JB & \Sexpr{input$eg} \\
+Soit & \Sexpr{round(input$eg/input$vl,2)} JB par VL \\
+\\
+\hline
+ \textbf{\textcolor{blue} {Production laiti\`ere} } \\
+ \hline
+ \\
+ Lait produit & \Sexpr{round(input$laiprod/1000,0)} 000 litres \\
+ Soit & \Sexpr{round(input$laiprod/(1000*cer),0)} 000 litres/ha CV\\
+ Rendement laitier & \Sexpr{round(input$laiprod/input$vl,0)} L/VL/an\\
+ Lait vendu & \Sexpr{input$laiven/1000} 000 litres \\
+ \\
+\hline
+ \textbf{\textcolor{blue} {Alimentation} } \\
+ \hline
+ \\
+ Fourrages stock\'es & \Sexpr{round(input$stofou/input$ugb,1)} TMS par UGB\\
+ Part de mais dans la ration & \Sexpr{round(100*input$stoma/input$stofou,0)} \% de la ration\\
+ \\
+  \hline
+ \\
+\\
+ Commentaires\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\  
+\end{tabular}
+
+\newpage
+
+\part{Exploitation}
+\colorbox{yellow}{\begin{minipage}{5cm}
+  \textbf{\textcolor{blue} {\Sexpr{sys}}}
+\end{minipage}}
+\vspace{5\baselineskip}
+
+\begin{wrapfigure}{r}{0.5\linewidth}
+\centering
+\vspace{-250pt}
+<<produmo, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=2, fig.width=8>>=
+    prodlait<-input$prilait*input$laiven/1000
+    prodviabl<-input$pvbl*input$laiven/1000
+    aid<-input$aid
+    autprod<-input$autprod 
+    prod<-prodlait+prodviabl+autprod+aid
+    UMO<-input$TUMOE+input$TUMOS
+    prod_umo<-(prod/UMO)/1000
+       
+    barex(a=reperex(),var="pbumo",posex=prod_umo,rog=1)
+ @
+\vspace{3\baselineskip}
+<<ebepb, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=2, fig.width=8>>=
+        
+       prodlait <- input$prilait * input$laiven/1000
+        prodviabl <- input$pvbl * input$laiven/1000
+        aid <- input$aid
+        autprod <- input$autprod
+        prod <- prodlait + prodviabl + autprod + aid
+        chop <- input$chop
+        chst2 <- input$chst - input$foncier  - input$salex  -input$msa 
+        ebe2 <- prod - chop - chst2
+        
+        pcebe <- round(100 * ebe2/prod, 0)
+        
+        barex(a = reperex(), var = "ebep", posex = pcebe, rog = 1)
+        
+ @
+\vspace{3\baselineskip}
+<<ebeumo, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=2, fig.width=8>>=
+        prodlait <- input$prilait * input$laiven/1000
+        prodviabl <- input$pvbl * input$laiven/1000
+        aid <- input$aid
+        autprod <- input$autprod
+        prod <- prodlait + prodviabl + autprod + aid
+        chop <- input$chop
+        
+        chst2 <- input$chst - input$foncier  - input$salex  -input$msa 
+        ebe2 <- prod - chop - chst2
+        UMO<-input$TUMOE+input$TUMOS
+        ebe_umo <- (ebe2/UMO)/1000
+        
+        barex(a = reperex(), var = "ebeumo", posex = ebe_umo, rog = 1)
+ @
+\vspace{3\baselineskip}
+<<annuebe, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=2, fig.width=8>>=
+               prodlait <- input$prilait * input$laiven/1000
+        prodviabl <- input$pvbl * input$laiven/1000
+        aid <- input$aid
+        autprod <- input$autprod
+        prod <- prodlait + prodviabl + autprod + aid
+        
+        chop <- input$chop
+        
+        chst <- input$chst -input$msa + msa()
+        ebe <- prod - chop - chst
+      
+        annu <- input$annu
+        
+        annu_ebe <- round(100 * annu/ebe)
+        
+        barex(a = reperex(), var = "anub", posex = annu_ebe, rog = 0)
+ @
+\end{wrapfigure}
+\begin{tabular}{rl} 
+  \hline
+ \textbf{\textcolor{blue} {Produits} } \\
+ \hline
+ \\
+  Produit brut total (1) & \Sexpr{round(prod/1000,0)} 000 Euros\\
+ Dt produit lait & \Sexpr{round(prodlait/1000,0)} 000 Euros\\ 
+ Produit brut par UMO total & \Sexpr{round(prod_umo)} 000 Euros\\
+  \\
+  \hline
+ \textbf{\textcolor{blue} {Charges} } \\
+ \hline
+ \\
+Charges ope.(2) & \Sexpr{round(input$chop/1000,0)} 000 Euros\\
+Charges de struct.(3)  & \Sexpr{round(input$chst/1000,0)} 000 Euros\\ 
+(Hors amort., FF ) & \\
+Dont charges sociales exploitant (4) & \Sexpr{round(msa()/1000,0)} 000 Euros\\
+Dont salaires et CS sal. (5)&\Sexpr{round(input$salex/1000,0)} 000 Euros\\
+Dont foncier (ferm.et Imp. fonc.) (6)&\Sexpr{round(input$foncier/1000,0)}000 Euros\\
+\\
+  \hline
+ \textbf{\textcolor{blue} {EBE} } \\
+ \hline
+ \\
+EBE (1-2-3) (7) & \Sexpr{round(ebe/1000,0)} 000 Euros\\
+EBE par UMO & \Sexpr{round(ebe/1000/UMO,0)} 000 Euros\\
+EBE (hors MO et foncier) (7+4+5+6)&\Sexpr{round(ebe2/1000)} 000 Euros\\
+EBE (hors MO et foncier) par UMO &\Sexpr{round(ebe2/1000/UMO)} 000 Euros\\
+EBE (hors MO et fonc.)/PB & \Sexpr{pcebe} \% du PB\\
+\\
+  \hline
+ \textbf{\textcolor{blue} {Endettement} } \\
+ \hline
+ \\
+Annuites & \Sexpr{round(annu/1000,0)} 000 Euros\\
+Annuites/EBE & \Sexpr{annu_ebe} \% de l'EBE\\
+\\
+  \hline
+ \textbf{\textcolor{blue} {Revenu} } \\
+ \hline
+ \\
+Disponible & \Sexpr{round((ebe-annu)/1000,0)} 000 Euros\\
+Disponible par UMO exploitant & \Sexpr{round((ebe-annu)/1000/input$TUMOE,0)} 000 Euros\\
+ \hline
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+ Commentaires\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\end{tabular}
+
+
+
+
+\newpage
+\part{Atelier lait}
+\colorbox{yellow}{\begin{minipage}{8cm}
+  \textbf{\textcolor{blue} {\Sexpr{atel}}}
+\end{minipage}}
+\vspace{3\baselineskip}
+
+\begin{wrapfigure}{r}{0.5\linewidth}
+\centering
+\vspace{-350pt}
+<<prodlai, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1.5, fig.width=8>>=
+     prodbl<-input$prilait+input$pvbl+input$CP_aid
+      barat(a=reperat(),var="prodbl",posat=prodbl,rog=1)
+ @
+%\vspace{1\baselineskip}
+<<prilai, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1, fig.width=8>>=
+      barat(a=reperat(),var="prilait",posat=input$prilait,rog=1)
+ @
+\vspace{1\baselineskip}
+\dotfill
+<<sali, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1.5, fig.width=8>>=
+    sali_ferme<-input$CP_alim+input$CP_surf+input$CP_meca+input$CP_fon
+    barat(a=reperat(),var="sali",posat=sali_ferme,rog=0)
+ @
+%\vspace{1\baselineskip}
+<<cali, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1, fig.width=8>>=
+  cali_ferme<-input$CP_alim+input$CP_surf
+  barat(a=reperat(),var="cali",posat=cali_ferme,rog=0)
+ @
+%\vspace{1\baselineskip}
+<<meca, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1, fig.width=8>>=  
+  meca_ferme<-input$CP_meca
+  barat(a=reperat(),var="meca",posat=meca_ferme,rog=0)
+ @
+\vspace{1\baselineskip}
+\dotfill
+<<bat, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1.5, fig.width=8>>=
+   bat_ferme<-input$CP_bat
+  barat(a=reperat(),var="bat",posat=bat_ferme,rog=0)
+ @
+\vspace{1\baselineskip}
+\dotfill
+<<ser, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1.5, fig.width=8>>=
+      serv_ferme<-input$CP_fel + input$CP_gest 
+      barat(a=reperat(),var="serv",posat=serv_ferme,rog=0)
+ @
+\vspace{1\baselineskip}
+\dotfill
+<<cap, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1.5, fig.width=8>>=
+  cap_ferme<-input$CP_cap
+  barat(a=reperat(),var="cap",posat=cap_ferme,rog=0)  
+ @
+\vspace{1\baselineskip}
+\dotfill
+<<travail, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=8, fig.width=8>>=
+  par(bg = "snow", mar = c(5, 5, 3, 3), bty = "n")
+        taille <- 1
+        # remuneration du W total
+        x <- (input$prilait + input$pvbl + input$CP_autprod + input$CP_aid - input$CP_alim - 
+            input$CP_surf - input$CP_fel - input$CP_meca - input$CP_bat - input$CP_gest - input$CP_fon - 
+            input$CP_cap)
+        
+        umoexp <- input$umoexp
+        umosal <- input$umosal
+        umoben <- input$umoben
+        umorem <- umoexp + umosal
+        
+        y <- input$laiven/umorem/1000
+        
+     filex <- cplnat[which(cplnat$grobl == input$blat), ]
+        
+        x1 <- filex$remun_l
+        y1 <- filex$lait_umo
+        maxx <- max(x1, x * 1.2)
+        maxy <- max(y1, y * 1.2)
+        
+        plot(x1, y1, ylim = c(0, maxy), xlim = c(0, maxx), pch = 19, cex = taille, col = "grey", 
+            xlab = "Remuneration du travail (Euros/1000L)", ylab = "Lait livre en 1000L par UMO remunere", 
+            font.lab = 4, cex.main = taille * 1.5, cex.lab = taille, cex.axis = 1, main = "Productivite et remuneration du travail")
+        
+        grid(col = "plum", lty = "dotted", lwd = 1)
+        
+        
+        MOtot <- umoexp + umosal + umoben
+        
+        if (umoben > 0) {
+            
+            text(maxx - 20, maxy, labels = "Main d'oeuvre benevole,", col = "red", font = 4, 
+                pos = 2)
+            text(maxx - 20, maxy - 20, labels = "non comptee en MO remuneree,", col = "red", 
+                font = 4, pos = 2)
+            text(maxx - 20, maxy - 40, labels = paste("represente", round(100 * (umoben/MOtot), 
+                digits = 0), "% de la"), col = "red", font = 4, pos = 2)
+            text(maxx - 20, maxy - 60, labels = "main d'oeuvre totale.", col = "red", font = 4, 
+                pos = 2)
+        }
+        
+        points(x, y, pch = 19, cex = taille * 2, col = "blue")
+        
+        lines(c(x, x), c(0, y), type = "l", lwd = 1, col = "green")
+        text(x, 0, labels = round(x, digit = 0), cex = taille * 0.8, col = "darkgreen", font = 4)
+        
+        lines(c(x, 0), c(y, y), type = "l", lwd = 1, col = "green")
+        text(0, y, labels = round(y, digit = 0), cex = taille * 0.8, col = "darkgreen", font = 4)
+        
+        Prodap <- seq(100, maxy, by = 10)
+        
+        Rem1 <- SMIC * 1.3/Prodap
+        Rem1.5 <- 1.5 * 1.3 * SMIC/Prodap
+        Rem2 <- 2 * 1.3 * SMIC/Prodap
+        
+        lines(Rem1, Prodap, type = "l", col = "red", lwd = 5)
+        text(20, maxy, labels = "1", pos = 4, col = "brown4", cex = taille, font = 4)
+        
+        lines(Rem1.5, Prodap, type = "l", col = "orange", lwd = 5)
+        text(35, maxy, labels = "1.5", pos = 4, col = "darkorange2", cex = taille, font = 4)
+        
+        lines(Rem2, Prodap, type = "l", col = "green", lwd = 5)
+        text(55, maxy, labels = "2 SMIC/UMO", pos = 4, col = "darkgreen", cex = taille, font = 4)
+        
+     remun_UMOtot<-round(x * y/(SMIC * 1.3),digits=2)
+ text(x, y, labels = paste(remun_UMOtot, "SMIC par UMO"), cex = taille, col = "blue", font = 2, srt = 10, pos = 3)
+######## calcul remunex
+         
+      xex <- x - 1000 * input$salait/input$laiven 
+      yex <- input$laiven/1000
+     
+     remex <- round(xex  * yex/(SMIC * 1.3)/umoexp,digits=2)
+ @
+\end{wrapfigure}
+%section{Economie de l'atelier}
+%vspace{1\baselineskip}
+\begin{tabular}{rl}
+  \hline
+ \textbf{\textcolor{blue} {Produits de l'atelier lait}} &\Sexpr{input$prilait+input$pvbl+input$CP_autprod+input$CP_aid} Euros/1000l \\
+ \hline
+ \\
+Dont prix du lait & \Sexpr{input$prilait}  Euros/1000l\\
+Dont viande et autres produits BL & \Sexpr{input$pvbl} Euros/1000l\\
+Dont autres produits BL  & \Sexpr{input$CP_auprod} Euros/1000l\\
+Dont aides BL  & \Sexpr{input$CP_aid} Euros/1000l\\
+\\
+\hline
+\textbf{\textcolor{blue} {Systeme alimentaire} }&\Sexpr{cali_ferme+meca_ferme+input$CP_fon} Euros/1000l \\
+\hline
+\\
+Dont cout alimentaire & \Sexpr{cali_ferme} Euros/1000l\\
+Dont m\'ecanisation &\Sexpr{meca_ferme} Euros/1000l\\
+Dont foncier&\Sexpr{input$CP_fon} Euros/1000l\\
+\\
+\hline
+\textbf{\textcolor{blue} {B\^atiment} }&\Sexpr{input$CP_bat} Euros/1000l \\
+\hline
+\\
+Eau, Electricit\'e, Entretien &\Sexpr{input$CP_bat-input$amort_bat} Euros/1000l\\
+Amortissements &\Sexpr{input$amort_bat} Euros/1000l\\
+\\
+\hline
+\textbf{\textcolor{blue} {Services} } & \Sexpr{input$CP_fel+input$CP_gest} Euros/1000l\\
+\hline
+\\
+ Frais d'\'elevage & \Sexpr{input$CP_fel} Euros/1000l\\
+Frais divers de gestion &\Sexpr{input$CP_gest} Euros/1000l\\
+\\
+\hline
+\textbf{\textcolor{blue} {Capital} } & \Sexpr{input$CP_cap} Euros/1000l\\
+\hline
+\\
+ Frais financiers &\Sexpr{input$CP_cap_input$rem_cap} Euros/1000l\\
+R\'emun\'eration du capital propre &\Sexpr{input$rem_cap} Euros/1000l\\
+\\
+\hline
+\textbf{\textcolor{blue} {R\'esultats} } & \\
+\hline
+\\
+Cout de production hors travail &\Sexpr{sali_ferme+bat_ferme+serv_ferme+cap_ferme} Euros/1000l \\
+R\'emun\'eration du travail& \Sexpr{prodbl-(sali_ferme+bat_ferme+serv_ferme+cap_ferme)} Euros/1000l \\
+productivit\'e de la MO &\Sexpr{round(input$laiven/umorem/1000,0)} 000 L\\
+R\'emun\'eration du travail & \\
+de la MO totale &\Sexpr{remun_UMOtot} SMIC\\
+de la MO exploitant &\Sexpr{remex} SMIC\\
+\\
+\hline
+\\
+ Commentaires\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\end{tabular}
+
+\newpage
+\part{Rep\'eres complementaires}
+\colorbox{yellow}{\begin{minipage}{8cm}
+  \textbf{\textcolor{blue} {\Sexpr{atel}}}
+\end{minipage}}
+\\
+\vspace{1\baselineskip}
+\begin{center}
+\LARGE{\textbf{\textcolor{blue} {Produits} }} \\
+\vspace{1\baselineskip}
+\end{center}
+\begin{wrapfigure}{r}{1\linewidth}
+\centering
+\vspace{-60pt}
+<<gridprod, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=3, fig.width=10>>=
+  
+a<-reperat()
+#a<-3
+b<-c(31, 34, 37)
+k<-posat[b,a]
+w<-data.frame(Repere=posat[b,2],
+              Moyenne=posat[b,a],
+              Mini=round(posat[b,a]*(1-posat[b+1,a]),0),
+              Maxi=round(posat[b,a]*(1+posat[b+1,a]),0),
+              Expl=rep("",length(b)),
+              Commentaires=rep("",length(b)))
+
+grid.table(w,
+  gpar.coretext = gpar(fontsize = 10,col="blue",cex=1.5),
+   gpar.corefill = gpar(fill = "lightblue", alpha=1, col = "red"),
+ gpar.rowtext = gpar(col = "blue", cex = 1.5, fontface = "bold"), 
+ gpar.coltext = gpar(col = "red", cex = 1.5, fontface = "italic"),
+  show.rownames = FALSE,
+   h.even.alpha = 0.5,show.vlines = TRUE,padding.h = unit(8, "mm"))
+ @
+\LARGE{\textbf{\textcolor{blue} {Systeme alimentaire} }} \\
+\vspace{1\baselineskip}
+<<gridalim, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=3, fig.width=10>>=
+a<-reperat()
+#a<-3
+b<-c(13, 40, 43, 49, 52, 55, 58, 19)
+k<-posat[b,a]
+w<-data.frame(Repere=posat[b,2],
+              Moyenne=round(posat[b,a],0),
+              Mini=round(posat[b,a]*(1-posat[b+1,a]),0),
+              Maxi=round(posat[b,a]*(1+posat[b+1,a]),0),
+              Expl=rep("",length(b)),
+              Commentaires=rep("",length(b)))
+
+grid.table(w,
+  gpar.coretext = gpar(fontsize = 10,col="blue",cex=1.5),
+   gpar.corefill = gpar(fill = "lightblue", alpha=1, col = "red"),
+ gpar.rowtext = gpar(col = "blue", cex = 1.5, fontface = "bold"), 
+ gpar.coltext = gpar(col = "red", cex = 1.5, fontface = "italic"),
+  show.rownames = FALSE,
+   h.even.alpha = 0.5,show.vlines = TRUE,padding.h = unit(8, "mm"))
+
+ @
+\vspace{1\baselineskip}
+\LARGE{\textbf{\textcolor{blue} {Batiments, services et capitaux} }} \\
+\vspace{1\baselineskip}
+<<gridaut, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=3, fig.width=10>>=
+a<-reperat()
+#a<-3
+b<-c(22, 61, 64, 67, 70,73, 76, 79, 82)
+k<-posat[b,a]
+w<-data.frame(Repere=posat[b,2],
+              Moyenne=round(posat[b,a],0),
+              Mini=round(posat[b,a]*(1-posat[b+1,a]),0),
+              Maxi=round(posat[b,a]*(1+posat[b+1,a]),0),
+              Expl=rep("",length(b)),
+              Commentaires=rep("",length(b)))
+
+grid.table(w,
+  gpar.coretext = gpar(fontsize = 10,col="blue",cex=1.5),
+   gpar.corefill = gpar(fill = "lightblue", alpha=1, col = "red"),
+ gpar.rowtext = gpar(col = "blue", cex = 1.5, fontface = "bold"), 
+ gpar.coltext = gpar(col = "red", cex = 1.5, fontface = "italic"),
+  show.rownames = FALSE,
+   h.even.alpha = 0.5,show.vlines = TRUE,padding.h = unit(8, "mm"))
+
+ @
+\end{wrapfigure}
+\end{document}

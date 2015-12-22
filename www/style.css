@@ -1,0 +1,100 @@
+
+em
+ {
+  font-size:12px; 
+  color:black;
+  font-weight:italic;
+ }
+
+
+h3
+{
+  font-size:20px;
+}
+  body {
+
+/*background-image: url("back2.jpg");*/
+background-color:#F3F3F3;
+
+
+}
+ 
+ label 
+{
+  font-size:14px;
+  display:inline-block;
+  color:blue;
+  }
+  
+ .well {
+   background-color:#FFFFE0;
+   } 
+  
+ 
+ #pvbl,#autprod,#chop,#chst,#amort,#msa,#salex,#foncier 
+ { font-size:15px;
+ width:100px;
+ display:inline-block;
+ }
+ 
+ 
+#TB,#TP,#cels,#con,#CP_conca,#charg,#wtiers,#carbu,#repa,#amortmat,#CP_autprod,
+#ser1,#ser2,#ser3,#eau,#edf,#enbat,#amobat,#fel,#veto,#fge,#ff,
+#TUMOE,#TUMOS,#SAU,#SFP,#ugb,#vl,#va,#eg,#stofou,
+#stoma,#CP_alim,#CP_surf,#CP_meca,#amort_meca,#CP_fon,#rem_fon,#CP_bat,
+#amort_bat,#CP_fel,#CP_gest,#CP_cap,#rem_cap
+  { 
+  font-size:15px;
+  width:100px;
+  display:inline-block;
+  }
+  
+#CPsal,#prirev,#prif
+{ font-size:12px;
+width:300px;
+display:inline-block;
+}
+
+#laiprod,#laiven,#blansys 
+{ font-size:12px;
+width:100px;
+display:inline-block;
+}
+
+#prilait,#aid,#annu,#fin,#travex,#annuBL,#CP_aid,#umoexp,#umosal,#salait
+{ 
+  font-size:15px;
+width:100px;
+display:inline-block;
+background-color:yellow;
+color:red;
+font-weight:bold;
+}
+ 
+#system,#atel,#blanblat
+{
+  font-size:20px;
+  width:350px;
+  display:inline-block;
+  color:blue;
+}
+
+#ferme,#datereal,#debex
+{
+  font-size:20px;
+  width:250px; 
+  display:inline-block;
+  color:red;
+  background-color:#FFFFE0;
+  text-align:center;
+  }
+
+#tec
+{
+  font-size:15px;
+  width:140px; 
+  display:inline-block;
+color:blue;
+background-color:#FFFFE0;
+text-align:center;
+}

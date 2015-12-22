@@ -1,0 +1,219 @@
+
+\documentclass[10pt,a4paper,portrait]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+ \usepackage[francais]{babel}
+ 
+\usepackage[margin=0.3in]{geometry}
+\usepackage[Q=yes,pverb-linebreak=no]{examplep}
+\usepackage{wrapfig}
+%\usepackage[cyr]{aeguill}
+\usepackage{xspace}
+\usepackage{array,multirow,tabularx}
+\usepackage{color}
+\usepackage{sidecap}
+\usepackage{titlesec}
+  \titleformat{\part}
+   {\normalfont\fontsize{13pt}{16pt}\selectfont\bfseries\color{red}}% apparence commune au titre et au numéro
+   {\thepart}% apparence du numéro
+   {1em}% espacement numéro/texte
+   {}% apparence du titre}
+
+\begin{document}
+
+\title{Diagnostic \includegraphics[width = 20mm]{www/logoreso.jpg} \hfill}
+\date{\vspace{-5ex}}
+
+ \author{Type d'atelier lait: {\Q{\Sexpr{input$blanblat}}}\\
+     Conjoncture 2014.}
+
+
+\maketitle
+
+\begin{wrapfigure}{r}{0.5\linewidth}
+\centering
+\vspace{-270pt}
+<<prodlai, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1.5, fig.width=8>>=
+      colat<-which(colnames(posat) == input$blanblat)
+      prodbl<-input$prilait+input$pvbl+input$CP_aid
+      barat(a=colat,var="prodbl",posat=-100,rog=1)
+ @
+%\vspace{1\baselineskip}
+<<prilai, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1, fig.width=8>>=
+      
+    barat(a=colat,var="prilait",posat=-100,rog=1)
+ @
+%\vspace{1\baselineskip}
+\dotfill
+<<sali, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1.5, fig.width=8>>=
+    sali_ferme<-input$CP_alim+input$CP_surf+input$CP_meca+input$CP_fon
+    barat(a=colat,var="sali",posat=-100,rog=0)
+ @
+%\vspace{1\baselineskip}
+<<cali, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1, fig.width=8>>=
+  cali_ferme<-input$CP_alim+input$CP_surf
+  barat(a=colat,var="cali",posat=-100,rog=0)
+ @
+%\vspace{1\baselineskip}
+<<meca, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1, fig.width=8>>=  
+  meca_ferme<-input$CP_meca
+  barat(a=colat,var="meca",posat=-100,rog=0)
+ @
+%\vspace{1\baselineskip}
+\dotfill
+<<bat, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1.5, fig.width=8>>=
+   bat_ferme<-input$CP_bat
+  barat(a=colat,var="bat",posat=-100,rog=0)
+ @
+%\vspace{1\baselineskip}
+\dotfill
+<<ser, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1.5, fig.width=8>>=
+      serv_ferme<-input$CP_fel + input$CP_gest 
+      barat(a=colat,var="serv",posat=-100,rog=0)
+ @
+%\vspace{1\baselineskip}
+\dotfill
+<<cap, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=1.5, fig.width=8>>=
+  cap_ferme<-input$CP_cap
+  barat(a=colat,var="cap",posat=-100,rog=0)  
+ @
+%\vspace{1\baselineskip}
+\dotfill
+<<travail, cache=FALSE, warning=FALSE, echo=FALSE, eval=TRUE, message=FALSE, prompt=FALSE,fig.height=7, fig.width=8>>=
+  par(bg = "snow", mar = c(5, 5, 3, 3), bty = "n")
+        taille <- 1
+        # remuneration du W total
+        x <- (input$prilait + input$pvbl + input$CP_autprod + input$CP_aid - input$CP_alim - 
+            input$CP_surf - input$CP_fel - input$CP_meca - input$CP_bat - input$CP_gest - input$CP_fon - 
+            input$CP_cap)
+        
+        umoexp <- input$umoexp
+        umosal <- input$umosal
+        umoben <- input$umoben
+        umorem <- umoexp + umosal
+        
+        y <- input$laiven/umorem/1000
+        
+     filex <- cplnat[which(cplnat$grobl == input$blanblat), ]
+        
+        x1 <- filex$remun_l
+        y1 <- filex$lait_umo
+        maxx <- max(x1, x * 1.2)
+        maxy <- max(y1, y * 1.2)
+        
+        plot(x1, y1, ylim = c(0, maxy), xlim = c(0, maxx), pch = 19, cex = taille, col = "grey", 
+            xlab = "Remuneration du travail (Euros/1000L)", ylab = "Lait livre en 1000L par UMO remunere", 
+            font.lab = 4, cex.main = taille * 1.5, cex.lab = taille, cex.axis = 1, main = "Productivite et remuneration du travail")
+        
+        grid(col = "plum", lty = "dotted", lwd = 1)
+        
+        
+        MOtot <- umoexp + umosal + umoben
+        
+        if (umoben > 0) {
+            
+            text(maxx - 20, maxy, labels = "Main d'oeuvre benevole,", col = "red", font = 4, 
+                pos = 2)
+            text(maxx - 20, maxy - 20, labels = "non comptee en MO remuneree,", col = "red", 
+                font = 4, pos = 2)
+            text(maxx - 20, maxy - 40, labels = paste("represente", round(100 * (umoben/MOtot), 
+                digits = 0), "% de la"), col = "red", font = 4, pos = 2)
+            text(maxx - 20, maxy - 60, labels = "main d'oeuvre totale.", col = "red", font = 4, 
+                pos = 2)
+        }
+        
+     #   points(x, y, pch = 19, cex = taille * 2, col = "blue")
+        
+     #   lines(c(x, x), c(0, y), type = "l", lwd = 1, col = "green")
+      #  text(x, 0, labels = round(x, digit = 0), cex = taille * 0.8, col = "darkgreen", font = 4)
+        
+       # lines(c(x, 0), c(y, y), type = "l", lwd = 1, col = "green")
+        #text(0, y, labels = round(y, digit = 0), cex = taille * 0.8, col = "darkgreen", font = 4)
+        
+        Prodap <- seq(100, maxy, by = 10)
+        
+        Rem1 <- SMIC * 1.3/Prodap
+        Rem1.5 <- 1.5 * 1.3 * SMIC/Prodap
+        Rem2 <- 2 * 1.3 * SMIC/Prodap
+        
+        lines(Rem1, Prodap, type = "l", col = "red", lwd = 5)
+        text(20, maxy, labels = "1", pos = 4, col = "brown4", cex = taille, font = 4)
+        
+        lines(Rem1.5, Prodap, type = "l", col = "orange", lwd = 5)
+        text(35, maxy, labels = "1.5", pos = 4, col = "darkorange2", cex = taille, font = 4)
+        
+        lines(Rem2, Prodap, type = "l", col = "green", lwd = 5)
+        text(55, maxy, labels = "2 SMIC/UMO", pos = 4, col = "darkgreen", cex = taille, font = 4)
+        
+     remun_UMOtot<-round(x * y/(SMIC * 1.3),digits=1)
+# text(x, y, labels = paste(remun_UMOtot, "SMIC par UMO"), cex = taille, col = "blue", font = 2, srt #= 10, pos = 3)
+######## calcul remunex
+         
+      xex <- x - 1000 * input$salait/input$laiven 
+      yex <- input$laiven/1000
+     
+     remex <- round(xex  * yex/(SMIC * 1.3)/umoexp,digits=1)
+ @
+\end{wrapfigure}
+
+\begin{tabular}{rl}
+  \hline
+ \textbf{\textcolor{blue} {Produits de l'atelier lait}} & ....... Euros/1000l \\
+ \hline
+ \\
+Dont prix du lait & \dotfill  Euros/1000l\\
+Dont viande et autres produits BL & \dotfill Euros/1000l\\
+Dont autres produits BL  & \dotfill Euros/1000l\\
+Dont aides BL  & \dotfill Euros/1000l\\
+\\
+\hline
+\textbf{\textcolor{blue} {Systeme alimentaire} }&\dotfill Euros/1000l \\
+\hline
+\\
+Dont cout alimentaire & \dotfill Euros/1000l\\
+Dont m\'ecanisation & \dotfill Euros/1000l\\
+Dont foncier& \dotfill Euros/1000l\\
+\\
+\hline
+\textbf{\textcolor{blue} {B\^atiment} }& \dotfill  Euros/1000l \\
+\hline
+\\
+Eau, Electricit\'e, Entretien &\dotfill Euros/1000l\\
+Amortissements & \dotfill Euros/1000l\\
+\\
+\hline
+\textbf{\textcolor{blue} {Services} } & \dotfill Euros/1000l\\
+\hline
+\\
+ Frais d'\'elevage & \dotfill Euros/1000l\\
+Frais divers de gestion &\dotfill Euros/1000l\\
+\\
+\hline
+\textbf{\textcolor{blue} {Capital} } & \dotfill Euros/1000l\\
+\hline
+\\
+ Frais financiers &\dotfill Euros/1000l\\
+R\'emun\'eration du capital propre &\dotfill Euros/1000l\\
+\\
+\hline
+\textbf{\textcolor{blue} {R\'esultats} } & \\
+\hline
+\\
+Cout de production hors travail &\dotfill Euros/1000l \\
+R\'emun\'eration du travail& \dotfill Euros/1000l \\
+productivit\'e de la MO &\dotfill 000 L/UMO\\
+R\'emun\'eration du travail & \\
+par UMO totale &\dotfill SMIC\\
+par UMO exploitant &\dotfill SMIC\\
+\\
+\hline
+\\
+ Commentaires\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\dotfill&\dotfill\\
+\end{tabular}
+\end{document}
